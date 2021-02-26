@@ -558,6 +558,10 @@ class Mail extends DataObject {
 			// this sets both the envelope sender (RFC5321.MailFrom) and the From: header (RFC5322.From)
 			$mailer->SetFrom($f['email'], $f['name']);
 		}
+		if (Config::getVar('email', 'force_default_reply_to')) {
+			$mailer->clearReplyTos();
+			$this->setReplyTo(Config::getVar('email', 'force_default_reply_to'));
+		}
 		// Set the envelope sender (RFC5321.MailFrom)
 		if (($s = $this->getEnvelopeSender()) != null) $mailer->Sender = $s;
 		foreach ((array) $this->getReplyTo() as $r) {
